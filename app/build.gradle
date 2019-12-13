@@ -58,12 +58,19 @@ dependencies {
 
     // Room
     implementation 'androidx.room:room-runtime:2.2.2'
-    //implementation 'androidx.room:room-rxjava2:2.2.2'
+    implementation 'androidx.room:room-rxjava2:2.2.2'
     annotationProcessor 'androidx.room:room-compiler:2.2.2'
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.7.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
 
+    // ViewModel and LiveData
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-rc03'
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.2.0-rc03"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0-rc03"
 
+    // glide for image
+    implementation "com.github.bumptech.glide:glide:4.9.0"
+    annotationProcessor "com.github.bumptech.glide:compiler:4.9.0"
 }

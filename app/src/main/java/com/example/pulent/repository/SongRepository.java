@@ -6,11 +6,14 @@ import com.example.pulent.api.ApiResponse;
 import com.example.pulent.api.SongApi;
 import com.example.pulent.database.SongDAO;
 import com.example.pulent.models.Song;
+import com.example.pulent.models.SongSearchResults;
 import com.example.pulent.ui.AppExecutors;
 import com.example.pulent.utils.RateLimiter;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
 
 public class SongRepository {
 
@@ -24,6 +27,10 @@ public class SongRepository {
         this.songDAO = songDAO;
         this.songApi = songApi;
         this.appExecutors = appExecutors;
+    }
+
+    public Call<SongSearchResults> loadSongss(String search, String mediaType, int offset, int limit){
+        return songApi.getAllData(search, mediaType, offset, limit);
     }
 
     public LiveData<Resource<List<Song>>> loadSongs(String search, String mediaType, int limit){

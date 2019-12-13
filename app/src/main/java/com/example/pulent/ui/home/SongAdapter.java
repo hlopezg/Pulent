@@ -11,10 +11,11 @@ import com.example.pulent.R;
 import com.example.pulent.databinding.LayoutSongItemBinding;
 import com.example.pulent.models.Song;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private final List<Song> songs;
+    private List<Song> songs;
 
     class ViewHolderData extends RecyclerView.ViewHolder {
         private final LayoutSongItemBinding mBinding;
@@ -49,6 +50,21 @@ public class SongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemCount() {
+        if(songs == null)
+            return 0;
         return songs.size();
+    }
+
+    public void setSongs(List<Song> songs) {
+        this.songs = songs;
+        notifyDataSetChanged();
+    }
+
+    public void addSongs(List<Song> songs) {
+        if(this.songs == null)
+            this.songs = songs;
+        else
+            this.songs.addAll(songs);
+        notifyDataSetChanged();
     }
 }

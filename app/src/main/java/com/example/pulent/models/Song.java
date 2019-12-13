@@ -1,9 +1,13 @@
 package com.example.pulent.models;
 
+import android.widget.ImageView;
+
+import androidx.databinding.BindingAdapter;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 @Entity
 public class Song {
@@ -25,12 +29,12 @@ public class Song {
     private String artworkUrl30;
     private String artworkUrl60;
     private String artworkUrl100;
-    private long collectionPrice;
-    private long collectionHdPrice;
-    private long trackPrice;
-    private Date releaseDate;
+    private double collectionPrice;
+    private double collectionHdPrice;
+    private double trackPrice;
+    private String releaseDate;
     private String collectionExplicitness;
-    private int trackExplicitness;
+    private String trackExplicitness;
     private int discCount;
     private int discNumber;
     private int trackCount;
@@ -42,7 +46,7 @@ public class Song {
     private String shortDescription;
     private String longDescription;
 
-    public Song(String wrapperType, String kind, long artistId, long collectionId, long trackId, String artistName, String collectionName, String trackName, String collectionCensoredName, String trackCensoredName, String artistViewUrl, String collectionViewUrl, String trackViewUrl, String previewUrl, String artworkUrl30, String artworkUrl60, String artworkUrl100, long collectionPrice, long collectionHdPrice, long trackPrice, Date releaseDate, String collectionExplicitness, int trackExplicitness, int discCount, int discNumber, int trackCount, int trackTimeMillis, String country, String currency, String primaryGenreName, String contentAdvisoryRating, String shortDescription, String longDescription) {
+    public Song(String wrapperType, String kind, long artistId, long collectionId, long trackId, String artistName, String collectionName, String trackName, String collectionCensoredName, String trackCensoredName, String artistViewUrl, String collectionViewUrl, String trackViewUrl, String previewUrl, String artworkUrl30, String artworkUrl60, String artworkUrl100, double collectionPrice, double collectionHdPrice, double trackPrice, String releaseDate, String collectionExplicitness, String trackExplicitness, int discCount, int discNumber, int trackCount, int trackTimeMillis, String country, String currency, String primaryGenreName, String contentAdvisoryRating, String shortDescription, String longDescription) {
         this.wrapperType = wrapperType;
         this.kind = kind;
         this.artistId = artistId;
@@ -214,35 +218,35 @@ public class Song {
         this.artworkUrl100 = artworkUrl100;
     }
 
-    public long getCollectionPrice() {
+    public double getCollectionPrice() {
         return collectionPrice;
     }
 
-    public void setCollectionPrice(long collectionPrice) {
+    public void setCollectionPrice(double collectionPrice) {
         this.collectionPrice = collectionPrice;
     }
 
-    public long getCollectionHdPrice() {
+    public double getCollectionHdPrice() {
         return collectionHdPrice;
     }
 
-    public void setCollectionHdPrice(long collectionHdPrice) {
+    public void setCollectionHdPrice(double collectionHdPrice) {
         this.collectionHdPrice = collectionHdPrice;
     }
 
-    public long getTrackPrice() {
+    public double getTrackPrice() {
         return trackPrice;
     }
 
-    public void setTrackPrice(long trackPrice) {
+    public void setTrackPrice(double trackPrice) {
         this.trackPrice = trackPrice;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -254,11 +258,11 @@ public class Song {
         this.collectionExplicitness = collectionExplicitness;
     }
 
-    public int getTrackExplicitness() {
+    public String getTrackExplicitness() {
         return trackExplicitness;
     }
 
-    public void setTrackExplicitness(int trackExplicitness) {
+    public void setTrackExplicitness(String trackExplicitness) {
         this.trackExplicitness = trackExplicitness;
     }
 
@@ -340,5 +344,16 @@ public class Song {
 
     public void setLongDescription(String longDescription) {
         this.longDescription = longDescription;
+    }
+
+    @BindingAdapter({ "avatar" })
+    public static void loadImage(ImageView imageView, String imageURL) {
+        Glide.with(imageView.getContext())
+                .setDefaultRequestOptions(new RequestOptions()
+                        .circleCrop())
+                .load(imageURL)
+                .override(100, 100)
+                //.placeholder(R.drawable.loading)
+                .into(imageView);
     }
 }

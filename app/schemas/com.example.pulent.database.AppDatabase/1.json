@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "24cabf25d8272a5f3934a8b531c0cdb7",
+    "identityHash": "1cae36f5046cb35e9701aacad601ed34",
     "entities": [
       {
         "tableName": "Song",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`wrapperType` TEXT, `kind` TEXT, `artistId` INTEGER NOT NULL, `collectionId` INTEGER NOT NULL, `trackId` INTEGER NOT NULL, `artistName` TEXT, `collectionName` TEXT, `trackName` TEXT, `collectionCensoredName` TEXT, `trackCensoredName` TEXT, `artistViewUrl` TEXT, `collectionViewUrl` TEXT, `trackViewUrl` TEXT, `previewUrl` TEXT, `artworkUrl30` TEXT, `artworkUrl60` TEXT, `artworkUrl100` TEXT, `collectionPrice` INTEGER NOT NULL, `collectionHdPrice` INTEGER NOT NULL, `trackPrice` INTEGER NOT NULL, `releaseDate` TEXT, `collectionExplicitness` TEXT, `trackExplicitness` INTEGER NOT NULL, `discCount` INTEGER NOT NULL, `discNumber` INTEGER NOT NULL, `trackCount` INTEGER NOT NULL, `trackTimeMillis` INTEGER NOT NULL, `country` TEXT, `currency` TEXT, `primaryGenreName` TEXT, `contentAdvisoryRating` TEXT, `shortDescription` TEXT, `longDescription` TEXT, PRIMARY KEY(`trackId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`wrapperType` TEXT, `kind` TEXT, `artistId` INTEGER NOT NULL, `collectionId` INTEGER NOT NULL, `trackId` INTEGER NOT NULL, `artistName` TEXT, `collectionName` TEXT, `trackName` TEXT, `collectionCensoredName` TEXT, `trackCensoredName` TEXT, `artistViewUrl` TEXT, `collectionViewUrl` TEXT, `trackViewUrl` TEXT, `previewUrl` TEXT, `artworkUrl30` TEXT, `artworkUrl60` TEXT, `artworkUrl100` TEXT, `collectionPrice` REAL NOT NULL, `collectionHdPrice` REAL NOT NULL, `trackPrice` REAL NOT NULL, `releaseDate` TEXT, `collectionExplicitness` TEXT, `trackExplicitness` TEXT, `discCount` INTEGER NOT NULL, `discNumber` INTEGER NOT NULL, `trackCount` INTEGER NOT NULL, `trackTimeMillis` INTEGER NOT NULL, `country` TEXT, `currency` TEXT, `primaryGenreName` TEXT, `contentAdvisoryRating` TEXT, `shortDescription` TEXT, `longDescription` TEXT, PRIMARY KEY(`trackId`))",
         "fields": [
           {
             "fieldPath": "wrapperType",
@@ -113,19 +113,19 @@
           {
             "fieldPath": "collectionPrice",
             "columnName": "collectionPrice",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "collectionHdPrice",
             "columnName": "collectionHdPrice",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "trackPrice",
             "columnName": "trackPrice",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -143,8 +143,8 @@
           {
             "fieldPath": "trackExplicitness",
             "columnName": "trackExplicitness",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "discCount",
@@ -220,7 +220,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '24cabf25d8272a5f3934a8b531c0cdb7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1cae36f5046cb35e9701aacad601ed34')"
     ]
   }
 }
