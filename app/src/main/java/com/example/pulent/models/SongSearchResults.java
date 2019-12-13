@@ -14,10 +14,10 @@ public class SongSearchResults {
     private int id;
 
     @SerializedName("results")
-    public final ArrayList<Song> songs;
+    public final List<Song> songs;
     public int resultCount;
 
-    public SongSearchResults(ArrayList<Song> songs, int resultCount) {
+    public SongSearchResults(List<Song> songs, int resultCount) {
         this.songs = songs;
         this.resultCount = resultCount;
     }

@@ -1,16 +1,20 @@
 package com.example.pulent.viewmodel;
 
+import android.os.AsyncTask;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.pulent.models.Song;
 import com.example.pulent.models.SongSearchQuery;
 import com.example.pulent.models.SongSearchResults;
 import com.example.pulent.repository.SongRepository;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,6 +24,7 @@ public class MainActivityViewModel extends ViewModel {
     private final MutableLiveData<SongSearchResults> lastSongSearchResult;
     private final MutableLiveData<SongSearchQuery> lastSongSearchQuery;
     private SongRepository songRepository;
+    public boolean isNetworkAvailable = true;
 
     MainActivityViewModel(SongRepository songRepository){
         lastSongSearchResult = new MutableLiveData<>();
@@ -49,9 +54,17 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
     public void getFirstSongs(String search, String mediaType, int offset, int limit){
-        lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
+        if(isNetworkAvailable) {
+            lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
 
-        getSongs(search, mediaType, offset, limit);
+            getSongs(search, mediaType, offset, limit);
+        }else {
+            AsyncTask.execute(() -> {
+                List<Song> songs = songRepository.loadSongsFromDb(search);
+                SongSearchResults songSearchResults = new SongSearchResults(songs, songs.size());
+                lastSongSearchResult.postValue(songSearchResults);
+            });
+        }
     }
 
     private void getSongs(String search, String mediaType, int offset, int limit){
@@ -65,17 +78,13 @@ public class MainActivityViewModel extends ViewModel {
                     SongSearchResults songSearchResults = response.body();
                     if(songSearchResults != null){
                         lastSongSearchQuery.getValue().hasMoreDataToLoad = songSearchResults.resultCount == limit;
+                        songRepository.insert(songSearchResults.songs);
                     }
 
                     lastSongSearchResult.postValue(songSearchResults);
                 }else{
-                    /*if (response.errorBody() != null) {
-                        Log.d("errorBody", response.message());
-                    }
-                    if(view!= null)
-                        view.onFailureTopUp();*/
+
                 }
-                //view.hideProgressLayout();
             }
 
             @Override

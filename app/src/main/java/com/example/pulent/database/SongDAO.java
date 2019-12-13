@@ -25,15 +25,18 @@ public interface SongDAO {
 
     @Query("DELETE FROM Song")
     void deleteAll();
-
-    @Query("SELECT * FROM Song WHERE artistName = :query OR trackName = :query")
+//collectionName
+    @Query("SELECT * FROM Song WHERE artistName LIKE '%' || :query || '%' OR trackName LIKE '%' || :query || '%'")
     List<Song> findByQuery(String query);
 
     @Query("SELECT * FROM Song WHERE trackId = :trackId")
-    LiveData<Song> findSong(long trackId);
+    Song findSong(long trackId);
 
     @Query("SELECT * FROM Song")
-    LiveData<List<Song>> getAll();
+    List<Song> getAll();
+
+    @Query("SELECT * FROM Song WHERE collectionId = :collectionId")
+    List<Song> findSongsFromAlbmun(long collectionId);
 
      /*@Query("SELECT * FROM Song")
     Flowable<Song> getFlowableAll();*/
