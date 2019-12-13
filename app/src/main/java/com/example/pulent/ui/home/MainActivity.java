@@ -35,6 +35,7 @@ import com.example.pulent.viewmodel.MainActivityViewModelFactory;
 public class MainActivity extends AppCompatActivity implements MainActivityImp{
     private MainActivityViewModel mainActivityViewModel;
     private SongAdapter songAdapter;
+    ActivityMainBinding activityMainBinding;
 
     private final String mediaType = "music";
     private final int limit = 20;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver), new IntentFilter("MyData"));
 
@@ -80,15 +81,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
         mainActivityViewModel.isNetworkAvailable = Utilities.isNetworkAvailable(this);
 
         mainActivityViewModel.getLastSongSearchResult().observe(this, songSearchResults -> {
-            //AsyncTask.execute(() -> {
                 if (mainActivityViewModel.getLastSongSearchQuery().getValue().offset == 0) {
                     songAdapter.setSongs(songSearchResults.songs);
-                    //songDAO.deleteAll();
                 } else {
                     songAdapter.addSongs(songSearchResults.songs);
                 }
-                //songDAO.insert(songSearchResults.songs);
-            //});
+        });
+
+        mainActivityViewModel.getState().observe(this, state -> {
+            activityMainBinding.setState(state);
         });
     }
 

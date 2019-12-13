@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Pulent</string>
+    <string name="search_hint">Busca por por tu artísta o canción</string>
 </resources>

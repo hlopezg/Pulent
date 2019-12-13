@@ -32,6 +32,9 @@ public interface SongDAO {
     @Query("SELECT * FROM Song WHERE trackId = :trackId")
     Song findSong(long trackId);
 
+    @Query("SELECT * FROM Song LIMIT :limit")
+    List<Song> getLast(int limit);
+
     @Query("SELECT * FROM Song")
     List<Song> getAll();
 

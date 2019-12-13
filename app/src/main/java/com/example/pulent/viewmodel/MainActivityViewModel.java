@@ -11,6 +11,8 @@ import com.example.pulent.models.Song;
 import com.example.pulent.models.SongSearchQuery;
 import com.example.pulent.models.SongSearchResults;
 import com.example.pulent.repository.SongRepository;
+import com.example.pulent.models.State;
+import com.example.pulent.repository.Status;
 
 
 import java.util.ArrayList;
@@ -23,16 +25,24 @@ import retrofit2.Response;
 public class MainActivityViewModel extends ViewModel {
     private final MutableLiveData<SongSearchResults> lastSongSearchResult;
     private final MutableLiveData<SongSearchQuery> lastSongSearchQuery;
+    private final MutableLiveData<State> state;
+
     private SongRepository songRepository;
     public boolean isNetworkAvailable = true;
 
     MainActivityViewModel(SongRepository songRepository){
         lastSongSearchResult = new MutableLiveData<>();
         lastSongSearchQuery = new MutableLiveData<>();
+        state = new MutableLiveData<>();
 
         lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
+        state.postValue(new State(Status.SUCCESS, ""));
 
         this.songRepository = songRepository;
+    }
+
+    public MutableLiveData<State> getState() {
+        return state;
     }
 
     public LiveData<SongSearchResults> getLastSongSearchResult() {
@@ -71,6 +81,8 @@ public class MainActivityViewModel extends ViewModel {
         lastSongSearchQuery.getValue().query = search;
         lastSongSearchQuery.getValue().offset = offset;
 
+        state.postValue(new State(Status.LOADING, "Cargando datos..."));
+
         songRepository.loadSongss(search, mediaType, offset, limit).enqueue(new Callback<SongSearchResults>() {
             @Override
             public void onResponse(@NonNull Call<SongSearchResults> call, @NonNull Response<SongSearchResults> response) {
@@ -83,17 +95,15 @@ public class MainActivityViewModel extends ViewModel {
 
                     lastSongSearchResult.postValue(songSearchResults);
                 }else{
-
+                    if(response.errorBody() != null)
+                        state.postValue(new State(Status.ERROR, response.errorBody().toString()));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<SongSearchResults> call, @NonNull Throwable t) {
                 t.getStackTrace();
-                /*if(view!= null) {
-                    view.onFailureTopUp();
-                    view.hideProgressLayout();
-                }*/
+                state.postValue(new State(Status.ERROR, t.getMessage()));
             }
         });
     }
