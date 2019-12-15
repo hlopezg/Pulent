@@ -94,6 +94,7 @@ public class MainActivityViewModel extends ViewModel {
                     }
 
                     lastSongSearchResult.postValue(songSearchResults);
+                    state.postValue(new State(Status.SUCCESS,""));
                 }else{
                     if(response.errorBody() != null)
                         state.postValue(new State(Status.ERROR, response.errorBody().toString()));

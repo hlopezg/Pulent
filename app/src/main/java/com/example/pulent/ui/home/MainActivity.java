@@ -25,6 +25,7 @@ import com.example.pulent.databinding.ActivityMainBinding;
 import com.example.pulent.models.Song;
 import com.example.pulent.models.SongSearchQuery;
 import com.example.pulent.repository.SongRepository;
+import com.example.pulent.repository.Status;
 import com.example.pulent.ui.detail.SongDetailActivity;
 import com.example.pulent.utils.Constants;
 import com.example.pulent.utils.EndlessRecyclerViewScrollListener;
@@ -44,6 +45,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        setSupportActionBar(activityMainBinding.toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowCustomEnabled(true); // enable overriding the default toolbar_main layout
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
         LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver), new IntentFilter("MyData"));
 
@@ -67,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
         }
     };
 
+    //Load ViewModel and observer
     private void initViewModels(){
-        //Load ViewModel and observer
         SongDAO songDAO = AppDatabase.getDatabase(this).songDAO();
         SongApi songApi =  ApiClient.getClient().create(SongApi.class);
 
@@ -81,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
         mainActivityViewModel.isNetworkAvailable = Utilities.isNetworkAvailable(this);
 
         mainActivityViewModel.getLastSongSearchResult().observe(this, songSearchResults -> {
+            if(mainActivityViewModel.getLastSongSearchQuery().getValue() != null)
                 if (mainActivityViewModel.getLastSongSearchQuery().getValue().offset == 0) {
                     songAdapter.setSongs(songSearchResults.songs);
                 } else {
