@@ -7,10 +7,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,7 +27,6 @@ import com.example.pulent.databinding.ActivityMainBinding;
 import com.example.pulent.models.Song;
 import com.example.pulent.models.SongSearchQuery;
 import com.example.pulent.repository.SongRepository;
-import com.example.pulent.repository.Status;
 import com.example.pulent.ui.detail.SongDetailActivity;
 import com.example.pulent.utils.Constants;
 import com.example.pulent.utils.EndlessRecyclerViewScrollListener;
@@ -33,10 +34,13 @@ import com.example.pulent.utils.Utilities;
 import com.example.pulent.viewmodel.MainActivityViewModel;
 import com.example.pulent.viewmodel.MainActivityViewModelFactory;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements MainActivityImp{
     private MainActivityViewModel mainActivityViewModel;
     private SongAdapter songAdapter;
-    ActivityMainBinding activityMainBinding;
+    private ActivityMainBinding activityMainBinding;
+    private SongRepository songRepository;
 
     private final String mediaType = "music";
     private final int limit = 20;
@@ -54,6 +58,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
         }
 
         LocalBroadcastManager.getInstance(this).registerReceiver((mMessageReceiver), new IntentFilter("MyData"));
+
+        SongDAO songDAO = AppDatabase.getDatabase(this).songDAO();
+        SongApi songApi =  ApiClient.getClient().create(SongApi.class);
+        songRepository = new SongRepository(songDAO, songApi);
 
         initRecyclerView(this, activityMainBinding);
 
@@ -76,11 +84,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
     };
 
     //Load ViewModel and observer
+    @SuppressLint("SetTextI18n")
     private void initViewModels(){
-        SongDAO songDAO = AppDatabase.getDatabase(this).songDAO();
-        SongApi songApi =  ApiClient.getClient().create(SongApi.class);
 
-        SongRepository songRepository = new SongRepository(songDAO, songApi);
         MainActivityViewModelFactory viewModelFactory = new MainActivityViewModelFactory(songRepository);
 
         mainActivityViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
@@ -90,19 +96,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
 
         mainActivityViewModel.getLastSongSearchResult().observe(this, songSearchResults -> {
             if(mainActivityViewModel.getLastSongSearchQuery().getValue() != null)
-                if (mainActivityViewModel.getLastSongSearchQuery().getValue().offset == 0) {
-                    songAdapter.setSongs(songSearchResults.songs);
-                } else {
-                    songAdapter.addSongs(songSearchResults.songs);
+                if(songSearchResults.resultCount == 0){
+                    if(activityMainBinding.editTextSongSearch.getText().toString().length() == 0){
+                        activityMainBinding.textViewTitle.setText(getText(R.string.last_searches));
+                        AsyncTask.execute(() ->{
+                            mainActivityViewModel.setLastSongClicked(songRepository.getRecentSongs());
+                        }
+                        );
+                    }else{
+                        activityMainBinding.textViewTitle.setText(String.format("No se han encontrado resultados para '%s'", activityMainBinding.editTextSongSearch.getText().toString()));
+                        songAdapter.setSongs(null);
+                    }
+                }else {
+                    activityMainBinding.textViewTitle.setText(getString(R.string.results));
+                    if (mainActivityViewModel.getLastSongSearchQuery().getValue().offset == 0) {
+                        songAdapter.setSongs(songSearchResults.songs);
+                    } else {    // when is getting more data for the paginator
+                        songAdapter.addSongs(songSearchResults.songs);
+                    }
                 }
         });
 
-        mainActivityViewModel.getState().observe(this, state -> {
-            activityMainBinding.setState(state);
+        mainActivityViewModel.getLastSongsClicked().observe(this, songs -> {
+            songAdapter.setSongs(songs);
         });
     }
 
-    private void initRecyclerView(Context context, ActivityMainBinding activityMainBinding){
+    private void initRecyclerView(Context context, ActivityMainBinding activityMainBinding) {
         // bind RecyclerView
         RecyclerView recyclerView = activityMainBinding.songsRecyclerView;
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
@@ -116,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
             @Override
             public void onLoadMore(int page, int totalItemsCount, int visibleThreshold) {
                 // Triggered only when new data needs to be appended to the list
-                if(mainActivityViewModel.getLastSongSearchResult() != null && mainActivityViewModel.getLastSongSearchResult().getValue().songs.size() == totalItemsCount) {
+                if(mainActivityViewModel.getLastSongSearchResult().getValue() != null && mainActivityViewModel.getLastSongSearchResult().getValue().songs.size() == totalItemsCount) {
                     mainActivityViewModel.getMoreSongs(limit);
                 }
             }
@@ -149,6 +169,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
 
     @Override
     public void onCardViewClickListener(Song song) {
+        songRepository.insert(song);
+
         Intent intent = new Intent(this, SongDetailActivity.class);
         intent.putExtra("trackId", song.getTrackId());
         startActivity(intent);

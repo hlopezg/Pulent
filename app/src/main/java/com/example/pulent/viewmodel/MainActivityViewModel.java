@@ -26,6 +26,7 @@ public class MainActivityViewModel extends ViewModel {
     private final MutableLiveData<SongSearchResults> lastSongSearchResult;
     private final MutableLiveData<SongSearchQuery> lastSongSearchQuery;
     private final MutableLiveData<State> state;
+    private final MutableLiveData<List<Song>> lastSongsClicked;
 
     private SongRepository songRepository;
     public boolean isNetworkAvailable = true;
@@ -34,12 +35,22 @@ public class MainActivityViewModel extends ViewModel {
         lastSongSearchResult = new MutableLiveData<>();
         lastSongSearchQuery = new MutableLiveData<>();
         state = new MutableLiveData<>();
+        lastSongsClicked = new MutableLiveData<>();
 
         lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
         state.postValue(new State(Status.SUCCESS, ""));
 
         this.songRepository = songRepository;
     }
+
+    public MutableLiveData<List<Song>> getLastSongsClicked() {
+        return lastSongsClicked;
+    }
+
+    public void setLastSongClicked(List<Song> lastSongsClicked) {
+        this.lastSongsClicked.postValue(lastSongsClicked);
+    }
+
 
     public MutableLiveData<State> getState() {
         return state;
@@ -65,7 +76,7 @@ public class MainActivityViewModel extends ViewModel {
     }
     public void getFirstSongs(String search, String mediaType, int offset, int limit){
         if(isNetworkAvailable) {
-            lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
+            //lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
 
             getSongs(search, mediaType, offset, limit);
         }else {
@@ -90,7 +101,7 @@ public class MainActivityViewModel extends ViewModel {
                     SongSearchResults songSearchResults = response.body();
                     if(songSearchResults != null){
                         lastSongSearchQuery.getValue().hasMoreDataToLoad = songSearchResults.resultCount == limit;
-                        songRepository.insert(songSearchResults.songs);
+                        //songRepository.insert(songSearchResults.songs);
                     }
 
                     lastSongSearchResult.postValue(songSearchResults);

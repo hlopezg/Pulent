@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "3719c52a07bec425fc0f0e985b72ba5c",
+    "version": 2,
+    "identityHash": "1cae36f5046cb35e9701aacad601ed34",
     "entities": [
       {
         "tableName": "Song",
@@ -215,36 +215,12 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "RecentSearch",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT, `trackId` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "date",
-            "columnName": "date",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "trackId",
-            "columnName": "trackId",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3719c52a07bec425fc0f0e985b72ba5c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1cae36f5046cb35e9701aacad601ed34')"
     ]
   }
 }

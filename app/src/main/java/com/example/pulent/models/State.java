@@ -3,8 +3,8 @@ package com.example.pulent.models;
 import com.example.pulent.repository.Status;
 
 public class State {
-    public Status status;
-    public String message;
+    private Status status;
+    private String message;
 
     public State(Status status, String message) {
         this.status = status;

@@ -14,6 +14,9 @@ import java.util.List;
 @Dao
 public interface SongDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(Song song);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<Song> songs);
 
     @Update
@@ -33,6 +36,9 @@ public interface SongDAO {
 
     @Query("SELECT * FROM Song LIMIT :limit")
     List<Song> getLast(int limit);
+
+    @Query("SELECT * FROM Song")
+    List<Song> getRecent();
 
     @Query("SELECT * FROM Song")
     List<Song> getAll();

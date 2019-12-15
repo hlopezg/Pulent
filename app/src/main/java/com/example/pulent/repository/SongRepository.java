@@ -24,12 +24,23 @@ public class SongRepository {
         return songApi.getAllData(search, mediaType, offset, limit);
     }
 
+    public List<Song> getRecentSongs(){
+        return songDAO.getRecent();
+    }
+
     public List<Song> loadAllSongs(){
         return songDAO.getAll();
     }
 
     public List<Song> loadSongsFromDb(String query){
         return songDAO.findByQuery(query);
+    }
+
+
+    public void insert(Song song){
+        AsyncTask.execute(() -> {
+            songDAO.insert(song);
+        });
     }
 
     public void insert(List<Song> songs){

@@ -62,12 +62,12 @@ public class SongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         return songs.size();
     }
 
-    public void setSongs(List<Song> songs) {
+    void setSongs(List<Song> songs) {
         this.songs = songs;
         notifyDataSetChanged();
     }
 
-    public void addSongs(List<Song> songs) {
+    void addSongs(List<Song> songs) {
         if(this.songs == null)
             this.songs = songs;
         else
