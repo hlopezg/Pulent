@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
         setSupportActionBar(activityMainBinding.toolbar);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowCustomEnabled(true); // enable overriding the default toolbar_main layout
+            getSupportActionBar().setDisplayShowCustomEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 

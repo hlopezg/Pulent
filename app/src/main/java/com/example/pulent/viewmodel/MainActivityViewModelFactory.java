@@ -7,19 +7,19 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.pulent.repository.SongRepository;
 
 public class MainActivityViewModelFactory implements ViewModelProvider.Factory {
-    private final SongRepository homeNotificationRepository;
+    private final SongRepository songRepository;
 
-    public MainActivityViewModelFactory(SongRepository homeNotificationRepository){
-        this.homeNotificationRepository = homeNotificationRepository;
+    public MainActivityViewModelFactory(SongRepository songRepository){
+        this.songRepository = songRepository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if(modelClass.isAssignableFrom(MainActivityViewModel.class))
-            return  (T) new MainActivityViewModel(homeNotificationRepository);
-        /*else if(modelClass.isAssignableFrom(HomeViewModel.class))
-            return  (T) new HomeViewModel(repository);*/
+            return  (T) new MainActivityViewModel(songRepository);
+        else if(modelClass.isAssignableFrom(SongDetailActivityViewModel.class))
+            return  (T) new SongDetailActivityViewModel(songRepository);
         else{
             throw new IllegalArgumentException("ViewModel Not Found");
         }
