@@ -7,7 +7,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +33,6 @@ import com.example.pulent.utils.Utilities;
 import com.example.pulent.viewmodel.MainActivityViewModel;
 import com.example.pulent.viewmodel.MainActivityViewModelFactory;
 
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainActivityImp{
     private MainActivityViewModel mainActivityViewModel;
@@ -77,14 +75,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
             if(intent.getExtras() != null) {
                 String type = intent.getExtras().getString("type");
                 if (type != null && type.equals(Constants.TYPE_NETWORK_CONECTION)) {
-                    mainActivityViewModel.isNetworkAvailable = intent.getExtras().getBoolean("connection");
+                    setNetworkConnectionStatus(intent.getExtras().getBoolean("connection"));
                 }
             }
         }
     };
 
+    private void setNetworkConnectionStatus(boolean hasNetworkConnection){
+        mainActivityViewModel.setIsNetworkAvailable(hasNetworkConnection);
+    }
+
     //Load ViewModel and observer
-    @SuppressLint("SetTextI18n")
     private void initViewModels(){
 
         MainActivityViewModelFactory viewModelFactory = new MainActivityViewModelFactory(songRepository);
@@ -92,7 +93,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
         mainActivityViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel.class);
         SongSearchQuery songSearchQuery = new SongSearchQuery("", mediaType, 0, false);
         mainActivityViewModel.setSongSearchQuery(songSearchQuery);
-        mainActivityViewModel.isNetworkAvailable = Utilities.isNetworkAvailable(this);
+        setNetworkConnectionStatus(Utilities.isNetworkAvailable(this));
+
+        mainActivityViewModel.getIsNetworkAvailable().observe(this, hasNetworkConnection -> {
+            activityMainBinding.setHasNetworkConnection(hasNetworkConnection);
+        });
 
         mainActivityViewModel.getLastSongSearchResult().observe(this, songSearchResults -> {
             if(mainActivityViewModel.getLastSongSearchQuery().getValue() != null)

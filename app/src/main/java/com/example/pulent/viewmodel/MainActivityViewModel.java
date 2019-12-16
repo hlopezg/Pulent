@@ -25,22 +25,35 @@ import retrofit2.Response;
 public class MainActivityViewModel extends ViewModel {
     private final MutableLiveData<SongSearchResults> lastSongSearchResult;
     private final MutableLiveData<SongSearchQuery> lastSongSearchQuery;
-    private final MutableLiveData<State> state;
+    private MutableLiveData<State> state;
     private final MutableLiveData<List<Song>> lastSongsClicked;
+    private MutableLiveData<Boolean> isNetworkAvailable;
 
     private SongRepository songRepository;
-    public boolean isNetworkAvailable = true;
 
     MainActivityViewModel(SongRepository songRepository){
         lastSongSearchResult = new MutableLiveData<>();
         lastSongSearchQuery = new MutableLiveData<>();
         state = new MutableLiveData<>();
         lastSongsClicked = new MutableLiveData<>();
+        isNetworkAvailable = new MutableLiveData<>();
 
         lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
         state.postValue(new State(Status.SUCCESS, ""));
 
         this.songRepository = songRepository;
+    }
+
+    public void setState(State state) {
+        this.state.setValue(state);
+    }
+
+    public void setIsNetworkAvailable(Boolean isNetworkAvailable) {
+        this.isNetworkAvailable.setValue(isNetworkAvailable);
+    }
+
+    public MutableLiveData<Boolean> getIsNetworkAvailable() {
+        return isNetworkAvailable;
     }
 
     public MutableLiveData<List<Song>> getLastSongsClicked() {
@@ -75,7 +88,7 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
     public void getFirstSongs(String search, String mediaType, int offset, int limit){
-        if(isNetworkAvailable) {
+        if(isNetworkAvailable.getValue()) {
             //lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
 
             getSongs(search, mediaType, offset, limit);

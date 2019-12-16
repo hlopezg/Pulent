@@ -3,5 +3,6 @@ package com.example.pulent.repository;
 public enum Status {
     LOADING,
     SUCCESS,
-    ERROR
+    ERROR,
+    NONE
 }

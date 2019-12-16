@@ -9,6 +9,9 @@
 
         <import type="com.example.pulent.repository.Status" />
 
+        <variable
+            name="hasNetworkConnection"
+            type="java.lang.Boolean" />
 
         <variable
             name="state"
@@ -64,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility='@{state.status.equals(Status.ERROR) ? View.VISIBLE : View.GONE}'
+            android:visibility='@{hasNetworkConnection ? View.GONE : View.VISIBLE}'
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progressbar">
@@ -73,7 +76,8 @@
                 android:id="@+id/textViewInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text='@{state.message}'
+                android:text="@string/no_internet_connection"
+                android:textAlignment="center"
                 tools:text="Info" />
         </LinearLayout>
 

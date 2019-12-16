@@ -3,4 +3,5 @@
     <string name="search_hint">Busca por tu artísta o canción</string>
     <string name="last_searches">Busquedas recientes</string>
     <string name="results">Resultados</string>
+    <string name="no_internet_connection">No internet connection</string>
 </resources>
