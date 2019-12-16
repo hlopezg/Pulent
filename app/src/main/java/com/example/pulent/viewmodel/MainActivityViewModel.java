@@ -44,10 +44,6 @@ public class MainActivityViewModel extends ViewModel {
         this.songRepository = songRepository;
     }
 
-    public void setState(State state) {
-        this.state.setValue(state);
-    }
-
     public void setIsNetworkAvailable(Boolean isNetworkAvailable) {
         this.isNetworkAvailable.setValue(isNetworkAvailable);
     }
@@ -82,28 +78,29 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public void getMoreSongs(int limit){
-        if(lastSongSearchResult.getValue() != null && lastSongSearchQuery.getValue().hasMoreDataToLoad) {
+        if(lastSongSearchResult.getValue() != null && lastSongSearchQuery.getValue() != null && lastSongSearchQuery.getValue().hasMoreDataToLoad) {
             lastSongSearchQuery.getValue().offset =+ limit;
             getSongs(lastSongSearchQuery.getValue().query, lastSongSearchQuery.getValue().mediaType, lastSongSearchQuery.getValue().offset, limit);
         }
     }
     public void getFirstSongs(String search, String mediaType, int offset, int limit){
-        if(isNetworkAvailable.getValue()) {
-            //lastSongSearchResult.setValue(new SongSearchResults(new ArrayList<>(), 0));
-
-            getSongs(search, mediaType, offset, limit);
-        }else {
-            AsyncTask.execute(() -> {
-                List<Song> songs = songRepository.loadSongsFromDb(search);
-                SongSearchResults songSearchResults = new SongSearchResults(songs, songs.size());
-                lastSongSearchResult.postValue(songSearchResults);
-            });
-        }
+        if(isNetworkAvailable.getValue() != null)
+            if(isNetworkAvailable.getValue()) {
+                getSongs(search, mediaType, offset, limit);
+            }else {
+                AsyncTask.execute(() -> {
+                    List<Song> songs = songRepository.loadSongsFromDb(search);
+                    SongSearchResults songSearchResults = new SongSearchResults(songs, songs.size());
+                    lastSongSearchResult.postValue(songSearchResults);
+                });
+            }
     }
 
     private void getSongs(String search, String mediaType, int offset, int limit){
-        lastSongSearchQuery.getValue().query = search;
-        lastSongSearchQuery.getValue().offset = offset;
+        if(lastSongSearchQuery.getValue() != null){
+            lastSongSearchQuery.getValue().query = search;
+            lastSongSearchQuery.getValue().offset = offset;
+        }
 
         state.postValue(new State(Status.LOADING, "Cargando datos..."));
 
@@ -114,7 +111,6 @@ public class MainActivityViewModel extends ViewModel {
                     SongSearchResults songSearchResults = response.body();
                     if(songSearchResults != null){
                         lastSongSearchQuery.getValue().hasMoreDataToLoad = songSearchResults.resultCount == limit;
-                        //songRepository.insert(songSearchResults.songs);
                     }
 
                     lastSongSearchResult.postValue(songSearchResults);

@@ -25,7 +25,6 @@ import com.example.pulent.repository.SongRepository;
 import com.example.pulent.viewmodel.MainActivityViewModelFactory;
 import com.example.pulent.viewmodel.SongDetailActivityViewModel;
 
-import java.io.IOException;
 import java.util.List;
 
 public class SongDetailActivity extends AppCompatActivity implements MediaPlayerImp {
@@ -55,9 +54,7 @@ public class SongDetailActivity extends AppCompatActivity implements MediaPlayer
 
         SongDetailActivityViewModel  mainActivityViewModel = ViewModelProviders.of(this, viewModelFactory).get(SongDetailActivityViewModel.class);
 
-        mainActivityViewModel.getSongList().observe(this, songs -> {
-            initRecyclerView(this, activitySongDetailBinding, songs);
-        });
+        mainActivityViewModel.getSongList().observe(this, songs -> initRecyclerView(this, activitySongDetailBinding, songs));
 
         mainActivityViewModel.getSongSelected().observe(this, song -> {
             activitySongDetailBinding.setSongItem(song);

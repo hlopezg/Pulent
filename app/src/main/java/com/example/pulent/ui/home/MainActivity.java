@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pulent.R;
 import com.example.pulent.api.ApiClient;
@@ -26,6 +27,7 @@ import com.example.pulent.databinding.ActivityMainBinding;
 import com.example.pulent.models.Song;
 import com.example.pulent.models.SongSearchQuery;
 import com.example.pulent.repository.SongRepository;
+import com.example.pulent.repository.Status;
 import com.example.pulent.ui.detail.SongDetailActivity;
 import com.example.pulent.utils.Constants;
 import com.example.pulent.utils.EndlessRecyclerViewScrollListener;
@@ -95,21 +97,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
         mainActivityViewModel.setSongSearchQuery(songSearchQuery);
         setNetworkConnectionStatus(Utilities.isNetworkAvailable(this));
 
-        mainActivityViewModel.getIsNetworkAvailable().observe(this, hasNetworkConnection -> {
-            activityMainBinding.setHasNetworkConnection(hasNetworkConnection);
+        mainActivityViewModel.getIsNetworkAvailable().observe(this, hasNetworkConnection -> activityMainBinding.setHasNetworkConnection(hasNetworkConnection));
+
+        mainActivityViewModel.getState().observe(this, state -> {
+            activityMainBinding.setState(state);
+            if(state.getStatus() == Status.ERROR){
+                Toast.makeText(getApplicationContext(), state.getMessage(),Toast.LENGTH_LONG).show();
+            }
         });
 
         mainActivityViewModel.getLastSongSearchResult().observe(this, songSearchResults -> {
             if(mainActivityViewModel.getLastSongSearchQuery().getValue() != null)
+                //if didn't put any text to search or the response cames with no results
                 if(songSearchResults.resultCount == 0){
+                    //no text in the search bar
                     if(activityMainBinding.editTextSongSearch.getText().toString().length() == 0){
                         activityMainBinding.textViewTitle.setText(getText(R.string.last_searches));
-                        AsyncTask.execute(() ->{
-                            mainActivityViewModel.setLastSongClicked(songRepository.getRecentSongs());
-                        }
+                        AsyncTask.execute(() -> mainActivityViewModel.setLastSongClicked(songRepository.getRecentSongs())
                         );
                     }else{
-                        activityMainBinding.textViewTitle.setText(String.format("No se han encontrado resultados para '%s'", activityMainBinding.editTextSongSearch.getText().toString()));
+                        //no results
+                        activityMainBinding.textViewTitle.setText(String.format(getString(R.string.there_is_no_results), activityMainBinding.editTextSongSearch.getText().toString()));
                         songAdapter.setSongs(null);
                     }
                 }else {
@@ -122,9 +130,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
                 }
         });
 
-        mainActivityViewModel.getLastSongsClicked().observe(this, songs -> {
-            songAdapter.setSongs(songs);
-        });
+        mainActivityViewModel.getLastSongsClicked().observe(this, songs -> songAdapter.setSongs(songs));
     }
 
     private void initRecyclerView(Context context, ActivityMainBinding activityMainBinding) {
