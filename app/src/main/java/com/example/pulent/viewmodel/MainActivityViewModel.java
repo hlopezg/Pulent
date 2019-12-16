@@ -104,7 +104,7 @@ public class MainActivityViewModel extends ViewModel {
 
         state.postValue(new State(Status.LOADING, "Cargando datos..."));
 
-        songRepository.loadSongss(search, mediaType, offset, limit).enqueue(new Callback<SongSearchResults>() {
+        songRepository.loadSongs(search, mediaType, offset, limit).enqueue(new Callback<SongSearchResults>() {
             @Override
             public void onResponse(@NonNull Call<SongSearchResults> call, @NonNull Response<SongSearchResults> response) {
                 if(response.isSuccessful()) {

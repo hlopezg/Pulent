@@ -24,4 +24,7 @@ public interface SongApi {
 
     @GET("search?")
     Call<SongSearchResults> getAllData(@Query("term") String term, @Query("mediaType") String mediaType,@Query("offset") int offset, @Query("limit") int limit);
+
+    @GET("lookup?")
+    Call<SongSearchResults> getAllSongsInCollectionId(@Query("id") long id, @Query("entity") String entity);
 }

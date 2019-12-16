@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityImp{
 
         Intent intent = new Intent(this, SongDetailActivity.class);
         intent.putExtra("trackId", song.getTrackId());
+        intent.putExtra("SongClass", song);
         startActivity(intent);
     }
 }

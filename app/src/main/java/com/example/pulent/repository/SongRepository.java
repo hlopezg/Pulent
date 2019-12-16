@@ -20,8 +20,12 @@ public class SongRepository {
         this.songApi = songApi;
     }
 
-    public Call<SongSearchResults> loadSongss(String search, String mediaType, int offset, int limit){
+    public Call<SongSearchResults> loadSongs(String search, String mediaType, int offset, int limit){
         return songApi.getAllData(search, mediaType, offset, limit);
+    }
+
+    public Call<SongSearchResults> loadAllSongsFromCollectionId(long collectionId, String entity){
+        return songApi.getAllSongsInCollectionId(collectionId, entity);
     }
 
     public List<Song> getRecentSongs(){

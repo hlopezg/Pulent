@@ -9,8 +9,10 @@ import androidx.room.PrimaryKey;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.io.Serializable;
+
 @Entity
-public class Song {
+public class Song implements Serializable {
     private String wrapperType;
     private String kind;
     private long artistId;

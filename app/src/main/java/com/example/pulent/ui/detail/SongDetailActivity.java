@@ -31,6 +31,7 @@ public class SongDetailActivity extends AppCompatActivity implements MediaPlayer
     private MediaPlayer mediaPlayer;
     private ActivitySongDetailBinding activitySongDetailBinding;
     private int length = 0;
+    private final String entity = "song";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +64,13 @@ public class SongDetailActivity extends AppCompatActivity implements MediaPlayer
             playAudio(song.getPreviewUrl());
         });
 
-        if(getIntent().hasExtra("trackId")) {
-            long trackId = getIntent().getExtras().getLong("trackId");
-            AsyncTask.execute(() -> {
-                Song song = AppDatabase.getDatabase(this).songDAO().findSong(trackId);
+        if(getIntent().hasExtra("SongClass")) {
+            Song song = (Song) getIntent().getSerializableExtra("SongClass");
+            if(song != null) {
                 getSupportActionBar().setTitle(song.getArtistName());
-
-                List<Song> songs = AppDatabase.getDatabase(this).songDAO().findSongsFromAlbmun(song.getCollectionId());
-
                 mainActivityViewModel.setSongSelected(song);
-                mainActivityViewModel.setSongList(songs);
-            });
+                mainActivityViewModel.getSongs(song.getCollectionId(), entity);
+            }
         }
     }
 
