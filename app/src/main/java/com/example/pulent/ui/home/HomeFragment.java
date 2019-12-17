@@ -47,7 +47,7 @@ import com.example.pulent.viewmodel.MainActivityViewModelFactory;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements MainActivityImp{
+public class HomeFragment extends Fragment implements HomeCardViewAdapterImp {
     private MainActivityViewModel mainActivityViewModel;
     private SongAdapter songAdapter;
 

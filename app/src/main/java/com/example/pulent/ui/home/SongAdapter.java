@@ -1,7 +1,6 @@
 package com.example.pulent.ui.home;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,12 +11,11 @@ import com.example.pulent.R;
 import com.example.pulent.databinding.LayoutSongItemBinding;
 import com.example.pulent.models.Song;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<Song> songs;
-    private MainActivityImp mainActivityImp;
+    private HomeCardViewAdapterImp homeCardViewAdapterImp;
 
     class ViewHolderData extends RecyclerView.ViewHolder {
         private final LayoutSongItemBinding mBinding;
@@ -32,9 +30,9 @@ public class SongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
-    SongAdapter(List<Song> songs, MainActivityImp mainActivityImp){
+    SongAdapter(List<Song> songs, HomeCardViewAdapterImp homeCardViewAdapterImp){
         this.songs = songs;
-        this.mainActivityImp = mainActivityImp;
+        this.homeCardViewAdapterImp = homeCardViewAdapterImp;
     }
 
     @NonNull
@@ -51,7 +49,7 @@ public class SongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         SongAdapter.ViewHolderData viewHolder = (SongAdapter.ViewHolderData)holder;
         viewHolder.bind(songs.get(viewHolder.getAdapterPosition()));
         viewHolder.mBinding.cardView.setOnClickListener(v -> {
-            mainActivityImp.onCardViewClickListener(songs.get(viewHolder.getAdapterPosition()));
+            homeCardViewAdapterImp.onCardViewClickListener(songs.get(viewHolder.getAdapterPosition()));
         });
     }
 
