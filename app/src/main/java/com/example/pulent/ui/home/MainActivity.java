@@ -12,22 +12,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        /*setSupportActionBar(activityMainBinding.toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowCustomEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }*/
-
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             HomeFragment fragment = new HomeFragment();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.nav_graph, fragment)
+                    .add(R.id.main_content, fragment)
                     .commit();
-        }
-
+        }*/
     }
+
+    /*public void navigateToProductDetail(String productId) {
+        DetailFragment fragment = new DetailFragment();
+        Bundle args = new Bundle();
+        args.putInt(KEY_PRODUCT_ID, productId);
+        fragment.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack(DetailFragment.TAG)
+                .replace(R.id.main_content, fragment, ProductDetailsFragment.TAG)
+                .commit();
+    }*/
 
 }
